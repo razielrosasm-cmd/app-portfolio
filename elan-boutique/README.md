@@ -127,7 +127,6 @@ The business needed a real storefront with real inventory, without hiring a dedi
 *Caption: Order management with status transitions.*
 
 ![Admin settings](./screenshots/admin-settings.png)
-
 *Caption: Store settings — notifications, contact channels, and metadata.*
 
 ---
