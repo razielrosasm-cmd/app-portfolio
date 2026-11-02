@@ -97,6 +97,7 @@ The business needed a real storefront with real inventory, without hiring a dedi
 *Caption: Category listing with variant-aware product cards.*
 
 ![Product detail](./screenshots/product-detail.png)
+
 *Caption: Product detail with multi-image gallery and per-variant stock.*
 
 ![Cart](./screenshots/cart.png)
