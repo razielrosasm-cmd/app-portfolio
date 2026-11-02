@@ -104,6 +104,7 @@ The business needed a real storefront with real inventory, without hiring a dedi
 *Caption: Cart with variant summary and quantity controls.*
 
 ![Checkout](./screenshots/checkout.png)
+
 *Caption: Checkout — customer details and delivery information.*
 
 ![Order confirmation](./screenshots/order-confirmation.png)
