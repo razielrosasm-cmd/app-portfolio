@@ -97,15 +97,18 @@ The business needed a real storefront with real inventory, without hiring a dedi
 *Caption: Category listing with variant-aware product cards.*
 
 ![Product detail](./screenshots/product-detail.png)
+
 *Caption: Product detail with multi-image gallery and per-variant stock.*
 
 ![Cart](./screenshots/cart.png)
 *Caption: Cart with variant summary and quantity controls.*
 
 ![Checkout](./screenshots/checkout.png)
+
 *Caption: Checkout — customer details and delivery information.*
 
 ![Order confirmation](./screenshots/order-confirmation.png)
+
 *Caption: Order confirmation with WhatsApp follow-up link.*
 
 ![Admin login](./screenshots/admin-login.png)
@@ -124,6 +127,7 @@ The business needed a real storefront with real inventory, without hiring a dedi
 *Caption: Order management with status transitions.*
 
 ![Admin settings](./screenshots/admin-settings.png)
+
 *Caption: Store settings — notifications, contact channels, and metadata.*
 
 ---
