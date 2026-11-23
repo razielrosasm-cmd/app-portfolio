@@ -21,7 +21,7 @@ Per-variant inventory · order lifecycle · admin console · business intelligen
 
 A small women's fashion boutique sold through **social media DMs**. Variants (size × color) were tracked from memory, orders were lost in chat threads, and the owner had **no inventory of what was actually in stock** and **no history of what sold**.
 
-The business needed a real storefront with real inventory — **without** hiring a dedicated developer or paying for a heavyweight e-commerce platform.
+The business needed a real storefront with real inventory — **without** paying for a heavyweight e-commerce platform.
 
 ## What I built
 
