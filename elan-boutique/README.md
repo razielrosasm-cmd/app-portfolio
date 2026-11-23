@@ -1,315 +1,134 @@
+<div align="center">
+
 # Élan Boutique
 
-::: {align="center"}
-### From social media sales to a complete boutique e-commerce operating system.
+### A small fashion boutique, out of the DMs and into a real operating system.
 
-A production-ready e-commerce solution designed for fashion boutiques
-that want to move beyond manual orders, scattered inventory records, and
-social media DMs.
+Per-variant inventory · order lifecycle · admin console · business intelligence — built for a real business, running in production.
 
-**Online storefront · Variant-level inventory · Order management · Admin
-dashboard · Business intelligence**
-
-[![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#live-product)
+[![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#status)
 [![Type](https://img.shields.io/badge/type-e--commerce-informational?style=flat-square)](#)
-[![Solution](https://img.shields.io/badge/solution-boutique%20management-7c5e3c?style=flat-square)](#what-i-built)
-[![Source](https://img.shields.io/badge/source-private-lightgrey?style=flat-square)](#)
+[![Built for](https://img.shields.io/badge/built%20for-a%20real%20business-7c5e3c?style=flat-square)](#the-problem)
+[![License](https://img.shields.io/badge/source-private-lightgrey?style=flat-square)](#)
 
-**[🛍️ Live Storefront](https://elan-boutique.pages.dev)** · **[📸
-Screenshots](#screenshots)** · **[🧠 Engineering Deep-Dive
-→](./FOR-RECRUITERS.md)** · **[✉️ Discuss Your Boutique
-Solution](#work-with-me)**
-:::
+**[🛍️ Live storefront](https://elan-boutique.pages.dev)** · **[📸 Screenshots](#screenshots)** · **[🧠 Engineering deep-dive →](./FOR-RECRUITERS.md)** · **[✉️ Get in touch](#work-with-me)**
 
-------------------------------------------------------------------------
+</div>
+
+---
 
 ## The problem
 
-Many small fashion boutiques manage their businesses through social
-media messages, spreadsheets, and manual inventory tracking.
+A small women's fashion boutique sold through **social media DMs**. Variants (size × color) were tracked from memory, orders were lost in chat threads, and the owner had **no inventory of what was actually in stock** and **no history of what sold**.
 
-While this approach may work initially, it becomes increasingly
-difficult to manage as the business grows.
-
-Products come in multiple sizes and colors, stock availability changes
-constantly, and orders become scattered across conversations.
-
-The result?
-
--   **Inventory uncertainty:** Owners cannot reliably determine which
-    sizes and colors are available.
--   **Lost orders:** Customer requests and order details get buried in
-    social media conversations.
--   **Manual operations:** Order processing, stock updates, and customer
-    follow-ups consume valuable time.
--   **Limited visibility:** There is no centralized record of sales,
-    customers, or business performance.
--   **Growth limitations:** Managing more products and customers
-    increases operational complexity.
-
-The business needed more than an online catalog. It needed a centralized
-system to manage its day-to-day operations.
+The business needed a real storefront with real inventory.
 
 ## What I built
 
-I developed a complete e-commerce platform and administrative management
-system that transforms the traditional boutique sales workflow into a
-centralized digital operation.
+A production storefront and an admin console that replaced the DM workflow end-to-end: browsing, per-variant stock, cart, checkout, order confirmation, customer follow-up, and an operator dashboard the owner opens every morning.
 
-The solution connects the customer shopping experience with the internal
-business processes required to manage products, inventory, orders,
-customers, and sales performance.
+<div align="center">
 
-**The platform covers the complete sales lifecycle:**
+| Before | After |
+|---|---|
+| Stock tracked from memory | Per-variant inventory (size × color) reconciled on every order |
+| Orders lost in DMs | Order lifecycle with status, history, and immutable line-item snapshots |
+| "Did I sell this?" | Dashboard: revenue, ticket average, top of low-stock alerts |
+| Manual WhatsApp follow-up | Automated confirmation link + email to the owner on every order |
+| No record of customers | Customer list, order history, repeat-purchase visible |
 
--   **Online storefront:** Product catalog, categories, product
-    galleries, and product availability.
--   **Variant-level inventory:** Independent stock management for each
-    size and color combination.
--   **Shopping cart and checkout:** Structured customer information,
-    order details, and delivery selection.
--   **Order management:** Centralized order records, status tracking,
-    and historical information.
--   **Customer management:** Customer records and purchase history.
--   **Administrative console:** A centralized interface for managing
-    products, inventory, orders, and business settings.
--   **Business intelligence:** A dashboard providing visibility into
-    revenue, orders, average ticket, customers, and inventory alerts.
--   **Customer communication:** Automated order notifications and
-    WhatsApp-based confirmation workflows.
+</div>
 
-The result is a complete operating system for a boutique, rather than
-simply a website where customers can browse products.
+---
 
-::: {align="center"}
-  -----------------------------------------------------------------------
-  Before                              After
-  ----------------------------------- -----------------------------------
-  Stock tracked manually or from      Inventory managed by product
-  memory                              variant (size × color)
+## Problems solved — at a glance
 
-  Orders scattered across social      Centralized order management and
-  media DMs                           status tracking
-
-  Uncertainty about available         Inventory visibility through the
-  products                            platform
-
-  Manual order confirmation and       Structured order notifications and
-  follow-up                           WhatsApp confirmation
-
-  No centralized customer records     Customer database and purchase
-                                      history
-
-  Limited visibility into sales       Administrative dashboard with
-  performance                         business metrics
-  -----------------------------------------------------------------------
-:::
-
-------------------------------------------------------------------------
-
-## Problems solved --- at a glance
-
-> The same solution delivers value from three perspectives: operational
-> efficiency, data reliability, and business intelligence.
+> The same system viewed three ways: what broke, what it saves, and what it now tells the owner.
 
 ### 🧱 Operational problems solved
 
--   **Inventory race conditions.** Two customers attempting to purchase
-    the last available unit could cause inconsistent stock levels. Order
-    writes are serialized through a lock, with variant inventory
-    reconciled within the same transaction.
--   **Lost or fragmented orders.** Every order now has a centralized
-    record containing customer information, immutable line-item
-    snapshots, and a defined lifecycle state.
--   **Variant-level inventory visibility.** Stock is managed
-    independently for each size and color combination, allowing
-    customers and administrators to see actual product availability.
--   **Unreliable order processing.** Order confirmation is designed to
-    be idempotent, while notification and low-stock workflows provide
-    additional operational visibility.
--   **Administrative access security.** The administrative interface is
-    protected through server-issued rotating session tokens and
-    brute-force throttling rather than relying on an unrestricted public
-    admin route.
+- **Race conditions on stock.** Two customers checking out the same last unit would double-decrement it. Every order write is serialized through a lock and reconciles variant stock inside the same transaction.
+- **Lost orders.** Orders were chat threads; there was no canonical record. Every order now persists a customer snapshot, an immutable line-item snapshot, and a lifecycle state.
+- **Variant blindness.** "Do we have this in M / black?" was unanswerable. Stock is modeled at size × color, the unit the business actually tracks, and surfaced on the product page.
+- **Silent failures.** A dropped email or a failed write could go unnoticed. Order confirmation is idempotent and surfaced in the admin; low-stock alerts are proactive.
+- **Admin access.** A public admin route with no auth is a liability. Admin sessions use rotating server-issued tokens with brute-force throttling; the panel is not publicly reachable.
 
-### ⏱️ Operational efficiency --- time saved
+### ⏱️ Time saved (operator)
 
--   **Order intake:** Reduced from approximately 10 minutes of manual
-    back-and-forth to approximately 2 minutes through structured
-    customer checkout and automated owner notifications.
--   **Inventory checks:** Replaced manual shelf inspections and informal
-    inquiries with centralized stock visibility in the administrative
-    product editor.
--   **Daily business overview:** Replaced the absence of centralized
-    reporting with a dashboard displaying revenue, order count, average
-    ticket, customer count, and low-stock alerts.
--   **Customer follow-up:** Replaced manual WhatsApp copy-and-paste
-    workflows with a one-tap confirmation link containing the order
-    information.
-
-*Time savings are based on the estimated operating workflow and should
-be treated as illustrative rather than independently measured
-performance results.*
+- **Order intake:** from ~10 min of back-and-forth per order to ~2 min (customer fills checkout, owner gets a structured notification).
+- **Stock checks:** from "let me look at the shelf / ask" to **seconds** in the admin product editor.
+- **Daily overview:** from none to a **single dashboard** with revenue, orders, average ticket, customer count, and low-stock alerts.
+- **Manual follow-up:** from a manual WhatsApp copy-paste to a **one-tap confirmation link** pre-filled with the full order.
 
 ### 🎯 Accuracy & reliability
 
--   **Inventory as the source of truth.** `products.stock` is derived
-    from `inventory` and recalculated after variant mutations,
-    maintaining consistency between product-level summaries and
-    variant-level stock.
--   **Immutable order history.** Product names, prices, and quantities
-    are snapshotted when an order is created. Subsequent catalog changes
-    do not rewrite historical order details.
--   **Server-side calculations.** Delivery fees and order totals are
-    calculated on the server, preventing the client from independently
-    determining the final order amount.
--   **Safe data rendering.** Customer-supplied strings are escaped at
-    the appropriate boundaries before being displayed in administrative
-    views, notifications, and the storefront.
--   **Consistent order processing.** Transactional inventory updates and
-    idempotent confirmation workflows help prevent duplicate processing
-    and inconsistent business records.
+- **Stock is the source of truth.** `products.stock` is *derived* from `inventory` and recalculated on every variant mutation — no drift between the summary and the detail.
+- **Immutable order history.** Line items are snapshotted at purchase time; later price or name changes don't rewrite history.
+- **Deterministic totals.** Delivery fee and totals are computed server-side; the client never decides what an order costs.
+- **Safe rendering.** Every customer-supplied string is escaped at the boundary before it reaches admin views, notifications, or the storefront.
 
-### 📊 Business intelligence --- turning operations into decisions
+### 📊 Business intelligence (what the owner now knows)
 
-The platform gives the owner access to operational information that was
-previously unavailable or scattered across different channels.
+- **Revenue, order count, average ticket, customer count** — live, on the admin dashboard.
+- **Low-stock alerts** derived from per-variant thresholds — the operator sees what needs restocking before it sells out, not after.
+- **Delivery vs. pickup** split, and per-pickup-point demand, visible in the orders table.
+- **Repeat-customer visibility** via the customers table (phone-keyed).
+- **Operational clarity on demand** — the schema mirrors the operator's mental model, so the data is legible without a BI tool.
 
--   **Sales performance:** Revenue, order count, and average ticket.
--   **Customer visibility:** Customer records, purchase history, and
-    repeat-customer identification.
--   **Inventory intelligence:** Low-stock alerts based on individual
-    variant thresholds.
--   **Delivery insights:** Delivery versus pickup distribution and
-    demand by pickup location.
--   **Product visibility:** Product and variant availability, helping
-    identify restocking requirements.
--   **Operational reporting:** Centralized business information through
-    a dashboard without requiring a separate BI platform.
-
-The objective is not simply to collect business data, but to make it
-accessible and useful for everyday decisions.
-
-------------------------------------------------------------------------
+---
 
 ## Live product
 
-**[elan-boutique.pages.dev](https://elan-boutique.pages.dev)** --- the
-live storefront and reference implementation of the solution.
+**[elan-boutique.pages.dev](https://elan-boutique.pages.dev)** — the real storefront. It proxies a Google Apps Script web app behind a clean domain (the Apps Script `/exec` URL is intentionally not the public entry point).
 
-This is a working implementation built for a real fashion boutique,
-demonstrating how the platform operates in a production environment.
+> The admin panel is **not publicly reachable**. Screenshots below; access is scoped to the operator.
 
-The storefront uses Cloudflare Pages as its public entry point and
-proxies a Google Apps Script web application behind a clean domain. The
-underlying Apps Script `/exec` URL is intentionally not exposed as the
-public entry point.
-
-**The administrative console is restricted to authorized operators** and
-is not publicly accessible.
-
-The screenshots below demonstrate both the customer-facing shopping
-experience and the internal management capabilities.
-
-------------------------------------------------------------------------
+---
 
 ## Screenshots
 
-::: {align="center"}
+<div align="center">
+
 ### Storefront
 
-  ---------------------------------------------- -------------------------------------------------------
-  ![Home](./screenshots/storefront-home.png)     ![Category](./screenshots/category-catalog.png)
-  `<br/>`{=html} **Home** --- Featured           `<br/>`{=html} **Category** --- Product catalog with
-  collections and category navigation            variant-aware availability
-
-  ![Product](./screenshots/product-detail.png)   ![Cart](./screenshots/cart.png) `<br/>`{=html} **Cart**
-  `<br/>`{=html} **Product** --- Multi-image     --- Variant summary and quantity controls
-  gallery and per-variant stock                  
-
-  ![Checkout](./screenshots/checkout.png)        ![Confirmation](./screenshots/order-confirmation.png)
-  `<br/>`{=html} **Checkout** --- Customer       `<br/>`{=html} **Confirmation** --- Order confirmation
-  information and delivery selection             and WhatsApp follow-up
-  ---------------------------------------------- -------------------------------------------------------
+| | |
+|---|---|
+| ![Home](./screenshots/storefront-home.png) <br/> **Home** — featured collections, category navigation | ![Category](./screenshots/category-catalog.png) <br/> **Category** — variant-aware product cards |
+| ![Product](./screenshots/product-detail.png) <br/> **Product** — multi-image gallery, per-variant stock | ![Cart](./screenshots/cart.png) <br/> **Cart** — variant summary, quantity controls |
+| ![Checkout](./screenshots/checkout.png) <br/> **Checkout** — customer details, delivery method | ![Confirmation](./screenshots/order-confirmation.png) <br/> **Confirmation** — WhatsApp follow-up link |
 
 ### Admin console
 
-  ----------------------------------------------- ---------------------------------------------------
-  ![Login](./screenshots/admin-login.png)         ![Dashboard](./screenshots/admin-dashboard.png)
-  `<br/>`{=html} **Login** --- Authenticated      `<br/>`{=html} **Dashboard** --- Revenue, orders,
-  administrative session                          and low-stock alerts
+| | |
+|---|---|
+| ![Login](./screenshots/admin-login.png) <br/> **Login** — token-issued session | ![Dashboard](./screenshots/admin-dashboard.png) <br/> **Dashboard** — revenue, orders, low-stock alerts |
+| ![Products](./screenshots/admin-products.png) <br/> **Products** — variant counts, publish state | ![Editor](./screenshots/admin-product-editor.png) <br/> **Editor** — variants, 4-image gallery, category |
+| ![Orders](./screenshots/admin-orders.png) <br/> **Orders** — status transitions, delivery badges | ![Settings](./screenshots/admin-settings.png) <br/> **Settings** — contact, delivery, notifications |
 
-  ![Products](./screenshots/admin-products.png)   ![Editor](./screenshots/admin-product-editor.png)
-  `<br/>`{=html} **Products** --- Product         `<br/>`{=html} **Editor** --- Variant management,
-  management, variant counts, and publishing      four-image gallery, and categories
-  status                                          
+</div>
 
-  ![Orders](./screenshots/admin-orders.png)       ![Settings](./screenshots/admin-settings.png)
-  `<br/>`{=html} **Orders** --- Order status      `<br/>`{=html} **Settings** --- Business contact,
-  management and delivery information             delivery, and notification configuration
-  ----------------------------------------------- ---------------------------------------------------
-:::
+*Customer names, emails, phone numbers, and order IDs are obscured in published screenshots.*
 
-*Customer names, email addresses, phone numbers, and order IDs are
-obscured in published screenshots to protect customer privacy.*
 
-------------------------------------------------------------------------
+---
 
 ## Architecture
 
-The solution uses a lightweight architecture that connects the public
-storefront, application logic, operational database, caching layer,
-media storage, and customer communication workflows.
-
-``` text
-┌──────────────────────┐       ┌───────────────────────────┐
-│  Cloudflare Pages    │ HTTPS │  Google Apps Script       │
-│  (redirect / domain) │ ─────▶│  web app (API + SPA)      │
-└──────────────────────┘       └──────────────┬────────────┘
-                                              │
-                    ┌─────────────────────────┼─────────────────────────┐
-                    ▼                         ▼                         ▼
+```text
+┌──────────────────────┐        ┌───────────────────────────┐
+│  Cloudflare Pages    │  HTTPS │  Google Apps Script        │
+│  (redirect / domain) │ ─────▶ │  web app  (API + SPA)      │
+└──────────────────────┘        └──────────────┬────────────┘
+                                               │
+                    ┌──────────────────────────┼──────────────────────────┐
+                    ▼                          ▼                          ▼
           ┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
           │  Google Sheets   │      │  CacheService    │      │  Supabase        │
           │  (operational DB)│      │  (read layer)    │      │  Storage (media) │
           └──────────────────┘      └──────────────────┘      └──────────────────┘
-                                              │
-                                              ▼
+                                               │
+                                               ▼
                                    ┌──────────────────────┐
                                    │  WhatsApp + Email    │
-                                   │  (owner notification)│
+                                   │  (owner notify)      │
                                    └──────────────────────┘
-```
-
-------------------------------------------------------------------------
-
-## Work with me
-
-### Give your boutique its own digital operating system.
-
-Élan Boutique is a reference implementation of a reusable e-commerce
-solution designed for small and growing fashion businesses.
-
-I can adapt the platform to your boutique's identity, products,
-inventory structure, and operational requirements.
-
-**What your boutique can get:**
-
--   A branded online storefront.
--   Product and variant inventory management.
--   Shopping cart and customer checkout.
--   Centralized order and customer management.
--   Administrative dashboard and sales reporting.
--   WhatsApp and email communication workflows.
--   Business-specific configuration and deployment.
-
-### Built around your business, not a generic template.
-
-Every boutique has different products, workflows, delivery requirements,
-and business needs. The solution can be configured and extended to
-accommodate those differences.
-
-**Interested in bringing your boutique online?**
-
-Let's discuss your business requirements and how this solution can be
-adapted to your operation.
