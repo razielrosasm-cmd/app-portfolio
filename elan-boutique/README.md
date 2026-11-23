@@ -21,7 +21,7 @@ Per-variant inventory · order lifecycle · secure admin console · business int
 
 A small women's fashion boutique was selling through **social media DMs**. Variants (size and color) were tracked from memory, orders were lost in chat threads, and the owner had **no visibility into what was actually in stock** and **no history of what sold**.
 
-The business needed a real storefront with real inventory.
+The business needed a real storefront with real inventory — without hiring a dedicated developer or paying for a heavyweight e-commerce platform.
 
 ## What I Built
 
@@ -74,21 +74,52 @@ The system does more than process orders; it provides the owner with actionable 
 
 ## Architecture and Tech Stack
 
-```text
-┌──────────────────────┐        ┌───────────────────────────┐
-│  Cloudflare Pages    │  HTTPS │  Google Apps Script        │
-│  (redirect / domain) │ ─────▶ │  web app  (API + SPA)      │
-└──────────────────────┘        └──────────────┬────────────┘
-                                               │
-                    ┌──────────────────────────┼──────────────────────────┐
-                    ▼                          ▼                          ▼
-          ┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
-          │  Google Sheets   │      │  CacheService    │      │  Supabase        │
-          │  (operational DB)│      │  (read layer)    │      │  Storage (media) │
-          └──────────────────┘      └──────────────────┘      └──────────────────┘
-                                               │
-                                               ▼
-                                   ┌──────────────────────┐
-                                   │  WhatsApp + Email    │
-                                   │  (owner notify)      │
-                                   └──────────────────────┘
+The application is built with a highly optimized, lightweight architecture:
+
+*   **Frontend:** Cloudflare Pages hosting a modern, responsive Single Page Application (SPA) built with HTML5 and Tailwind CSS.
+*   **Backend:** Google Apps Script acting as a serverless API.
+*   **Database:** Google Sheets (chosen deliberately because the operator was already familiar with it).
+*   **Storage:** Supabase for fast image hosting.
+*   **Notifications:** Automated WhatsApp deep links and Emails directly to the owner.
+
+---
+
+## Screenshots
+
+<div align="center">
+
+### Storefront
+| | |
+|---|---|
+| ![Home](./screenshots/storefront-home.png) <br/> **Home** — featured collections | ![Category](./screenshots/category-catalog.png) <br/> **Category** — variant-aware cards |
+| ![Product](./screenshots/product-detail.png) <br/> **Product** — multi-image gallery | ![Checkout](./screenshots/checkout.png) <br/> **Checkout** — seamless order flow |
+
+### Admin Console
+| | |
+|---|---|
+| ![Dashboard](./screenshots/admin-dashboard.png) <br/> **Dashboard** — revenue and stock alerts | ![Orders](./screenshots/admin-orders.png) <br/> **Orders** — status transitions |
+| ![Products](./screenshots/admin-products.png) <br/> **Products** — manage catalog | ![Editor](./screenshots/admin-product-editor.png) <br/> **Editor** — variant management |
+
+</div>
+
+*Customer names, emails, phone numbers, and order IDs are obscured in published screenshots for privacy.*
+
+---
+
+## Work With Me
+
+I built Élan Boutique as a real production system for a real business. The admin panel is **not publicly reachable**; access is scoped to the operator.
+
+I am currently open to:
+*   **Junior Developer Roles:** I am eager to bring this problem-solving mindset to a full-time engineering team.
+*   **Collaborations:** Partnering on lean, operator-first software.
+*   **Freelance and Contract Work:** Building custom e-commerce and internal tools.
+
+*Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.*
+
+**Reach me:** [your email] · [LinkedIn] · [GitHub]
+
+---
+<div align="center">
+<sub>Source code is private. This repository is a showcase of my production work.</sub>
+</div>
