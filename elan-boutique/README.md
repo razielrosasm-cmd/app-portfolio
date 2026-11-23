@@ -2,133 +2,80 @@
 
 # Élan Boutique
 
-### A small fashion boutique, out of the DMs and into a real operating system.
+**A production e-commerce system replacing manual social-media sales with real inventory tracking, order management, and business analytics.**
 
-Per-variant inventory · order lifecycle · admin console · business intelligence — built for a real business, running in production.
+[![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#)
+[![Focus](https://img.shields.io/badge/focus-e--commerce%20%26%20automation-blue?style=flat-square)](#)
+[![Built for](https://img.shields.io/badge/built%20for-a%20real%20business-7c5e3c?style=flat-square)](#)
 
-[![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#status)
-[![Type](https://img.shields.io/badge/type-e--commerce-informational?style=flat-square)](#)
-[![Built for](https://img.shields.io/badge/built%20for-a%20real%20business-7c5e3c?style=flat-square)](#the-problem)
-[![License](https://img.shields.io/badge/source-private-lightgrey?style=flat-square)](#)
-
-**[🛍️ Live storefront](https://elan-boutique.pages.dev)** · **[📸 Screenshots](#screenshots)** · **[🧠 Engineering deep-dive →](./FOR-RECRUITERS.md)** · **[✉️ Get in touch](#work-with-me)**
+**[🛍️ Live Demo](https://elan-boutique.pages.dev)** · **[📸 Screenshots](#screenshots)** · **[✉️ Contact Me](#contact)**
 
 </div>
 
 ---
 
-## The problem
+## 📌 The Problem
 
-A small women's fashion boutique sold through **social media DMs**. Variants (size × color) were tracked from memory, orders were lost in chat threads, and the owner had **no inventory of what was actually in stock** and **no history of what sold**.
+A small fashion boutique was managing its entire business through Instagram and WhatsApp DMs. This created three massive bottlenecks:
+1. **No inventory control:** Stock for variants (size × color) was tracked mentally, leading to frequent overselling.
+2. **Lost data:** Orders were buried in chat threads with no centralized history.
+3. **No business insight:** The owner had no idea what their average order value was or what items needed restocking.
 
-The business needed a real storefront with real inventory.
+## 💡 The Solution
 
-## What I built
-
-A production storefront and an admin console that replaced the DM workflow end-to-end: browsing, per-variant stock, cart, checkout, order confirmation, customer follow-up, and an operator dashboard the owner opens every morning.
-
-<div align="center">
-
-| Before | After |
-|---|---|
-| Stock tracked from memory | Per-variant inventory (size × color) reconciled on every order |
-| Orders lost in DMs | Order lifecycle with status, history, and immutable line-item snapshots |
-| "Did I sell this?" | Dashboard: revenue, ticket average, top of low-stock alerts |
-| Manual WhatsApp follow-up | Automated confirmation link + email to the owner on every order |
-| No record of customers | Customer list, order history, repeat-purchase visible |
-
-</div>
+I built a custom, lightweight storefront and an administrative dashboard. The system allows customers to browse and checkout securely, while giving the owner a private panel to manage inventory, track orders, and view live sales metrics.
 
 ---
 
-## Problems solved — at a glance
+## 🛠️ Engineering Methodology & Highlights
 
-> The same system viewed three ways: what broke, what it saves, and what it now tells the owner.
+Instead of just writing code, I had to solve real-world engineering challenges to make this system reliable for a business. Here is how I approached it:
 
-### 🧱 Operational problems solved
+**1. Preventing Race Conditions (Concurrency)**
+*   *The Challenge:* What if two customers buy the last available shirt at the exact same time?
+*   *The Solution:* I implemented a **Locking Mechanism** (`LockService`). When an order starts, the system locks the inventory database, checks the stock, decrements it, and completes the order before unlocking. This guarantees 100% inventory accuracy.
 
-- **Race conditions on stock.** Two customers checking out the same last unit would double-decrement it. Every order write is serialized through a lock and reconciles variant stock inside the same transaction.
-- **Lost orders.** Orders were chat threads; there was no canonical record. Every order now persists a customer snapshot, an immutable line-item snapshot, and a lifecycle state.
-- **Variant blindness.** "Do we have this in M / black?" was unanswerable. Stock is modeled at size × color, the unit the business actually tracks, and surfaced on the product page.
-- **Silent failures.** A dropped email or a failed write could go unnoticed. Order confirmation is idempotent and surfaced in the admin; low-stock alerts are proactive.
-- **Admin access.** A public admin route with no auth is a liability. Admin sessions use rotating server-issued tokens with brute-force throttling; the panel is not publicly reachable.
+**2. Performance & Cost Optimization (Caching)**
+*   *The Challenge:* Fetching large amounts of data from the database (Google Sheets) on every page load is slow and hits platform limits.
+*   *The Solution:* I built a **3-layer caching strategy**. Data is stored in server memory (`CacheService`) and in the user's browser (`localStorage`). This makes the storefront load instantly while drastically reducing database reads.
 
-### ⏱️ Time saved (operator)
+**3. Security (Authentication & XSS)**
+*   *The Challenge:* Protecting the owner's admin panel and customer data.
+*   *The Solution:* I implemented **Token-based Authentication** with a 12-hour expiration and brute-force protection (failed logins lock the account temporarily). All customer input is sanitized to prevent cross-site scripting (XSS).
 
-- **Order intake:** from ~10 min of back-and-forth per order to ~2 min (customer fills checkout, owner gets a structured notification).
-- **Stock checks:** from "let me look at the shelf / ask" to **seconds** in the admin product editor.
-- **Daily overview:** from none to a **single dashboard** with revenue, orders, average ticket, customer count, and low-stock alerts.
-- **Manual follow-up:** from a manual WhatsApp copy-paste to a **one-tap confirmation link** pre-filled with the full order.
-
-### 🎯 Accuracy & reliability
-
-- **Stock is the source of truth.** `products.stock` is *derived* from `inventory` and recalculated on every variant mutation — no drift between the summary and the detail.
-- **Immutable order history.** Line items are snapshotted at purchase time; later price or name changes don't rewrite history.
-- **Deterministic totals.** Delivery fee and totals are computed server-side; the client never decides what an order costs.
-- **Safe rendering.** Every customer-supplied string is escaped at the boundary before it reaches admin views, notifications, or the storefront.
-
-### 📊 Business intelligence (what the owner now knows)
-
-- **Revenue, order count, average ticket, customer count** — live, on the admin dashboard.
-- **Low-stock alerts** derived from per-variant thresholds — the operator sees what needs restocking before it sells out, not after.
-- **Delivery vs. pickup** split, and per-pickup-point demand, visible in the orders table.
-- **Repeat-customer visibility** via the customers table (phone-keyed).
-- **Operational clarity on demand** — the schema mirrors the operator's mental model, so the data is legible without a BI tool.
+**4. Clean Data Architecture**
+*   *The Challenge:* How to handle products with multiple sizes and colors without losing track of stock.
+*   *The Solution:* I designed the database so that stock is tracked at the **variant level** (e.g., "Medium / Red"), and the main product's stock is automatically recalculated based on the variants. Orders also capture an immutable snapshot so changing a product price later doesn't ruin old order receipts.
 
 ---
 
-## Live product
+## 💻 The Tech Stack
 
-**[elan-boutique.pages.dev](https://elan-boutique.pages.dev)** — the real storefront. It proxies a Google Apps Script web app behind a clean domain (the Apps Script `/exec` URL is intentionally not the public entry point).
-
-> The admin panel is **not publicly reachable**. Screenshots below; access is scoped to the operator.
-
----
-
-## Screenshots
-
-<div align="center">
-
-### Storefront
-
-| | |
-|---|---|
-| ![Home](./screenshots/storefront-home.png) <br/> **Home** — featured collections, category navigation | ![Category](./screenshots/category-catalog.png) <br/> **Category** — variant-aware product cards |
-| ![Product](./screenshots/product-detail.png) <br/> **Product** — multi-image gallery, per-variant stock | ![Cart](./screenshots/cart.png) <br/> **Cart** — variant summary, quantity controls |
-| ![Checkout](./screenshots/checkout.png) <br/> **Checkout** — customer details, delivery method | ![Confirmation](./screenshots/order-confirmation.png) <br/> **Confirmation** — WhatsApp follow-up link |
-
-### Admin console
-
-| | |
-|---|---|
-| ![Login](./screenshots/admin-login.png) <br/> **Login** — token-issued session | ![Dashboard](./screenshots/admin-dashboard.png) <br/> **Dashboard** — revenue, orders, low-stock alerts |
-| ![Products](./screenshots/admin-products.png) <br/> **Products** — variant counts, publish state | ![Editor](./screenshots/admin-product-editor.png) <br/> **Editor** — variants, 4-image gallery, category |
-| ![Orders](./screenshots/admin-orders.png) <br/> **Orders** — status transitions, delivery badges | ![Settings](./screenshots/admin-settings.png) <br/> **Settings** — contact, delivery, notifications |
-
-</div>
-
-*Customer names, emails, phone numbers, and order IDs are obscured in published screenshots.*
-
+*   **Frontend:** HTML5, Tailwind CSS (responsive, modern UI)
+*   **Backend:** Google Apps Script (serverless API)
+*   **Database:** Google Sheets API (chosen specifically for the owner's familiarity)
+*   **Storage & Hosting:** Supabase (images), Cloudflare (domain)
 
 ---
 
-## Architecture
+## 📸 Screenshots
 
-```text
-┌──────────────────────┐        ┌───────────────────────────┐
-│  Cloudflare Pages    │  HTTPS │  Google Apps Script        │
-│  (redirect / domain) │ ─────▶ │  web app  (API + SPA)      │
-└──────────────────────┘        └──────────────┬────────────┘
-                                               │
-                    ┌──────────────────────────┼──────────────────────────┐
-                    ▼                          ▼                          ▼
-          ┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
-          │  Google Sheets   │      │  CacheService    │      │  Supabase        │
-          │  (operational DB)│      │  (read layer)    │      │  Storage (media) │
-          └──────────────────┘      └──────────────────┘      └──────────────────┘
-                                               │
-                                               ▼
-                                   ┌──────────────────────┐
-                                   │  WhatsApp + Email    │
-                                   │  (owner notify)      │
-                                   └──────────────────────┘
+| Storefront | Admin Dashboard |
+|:---:|:---:|
+| ![Home](./screenshots/storefront-home.png) | ![Dashboard](./screenshots/admin-dashboard.png) |
+| **Product View** | **Inventory Editor** |
+| ![Product](./screenshots/product-detail.png) | ![Editor](./screenshots/admin-product-editor.png) |
+
+*(Customer data in screenshots is redacted for privacy.)*
+
+---
+
+## 🤝 Contact
+
+I am a Junior Developer open to full-time roles, freelance work, and collaborations. I love building tools that solve real operational problems.
+
+*   **Email:** [your email]
+*   **LinkedIn:** [LinkedIn]
+*   **GitHub:** [GitHub]
+
+*(Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.)*
