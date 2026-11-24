@@ -33,7 +33,23 @@ This repository is a **showcase**. It holds architecture notes, engineering deci
 
 - **Debugging under constraints.** When email delivery stopped working or routing broke, I found the cause by reading the platform deeply — not by switching stacks.
 
-- **Pragmatic product thinking.** Each app solves one specific business problem. Online payment is intentionally left out where a human confirmation is safer. Login exists only where it is needed.
+- **Solutions that fit the requirement.** I design the system around what the business actually needs and can afford. When a client asks for more — online payments, automation, integrations — I build the more complex version. The goal is always to reduce process time with technology, at a cost the business can accept.
+
+---
+
+## Continuous improvement background
+
+Before I wrote production software, I worked with **lean manufacturing methodologies and continuous improvement**. I am not new to this field: I have used these methods to analyze real administrative and industrial problems and to move them from theory into practice.
+
+My experience covers process efficiency in areas such as:
+
+- Production lines
+- Quality
+- Warehouse
+- Logistics
+- Maintenance
+
+This background is why I think about software the same way I think about a process: find the waste, remove the manual steps, and design a system that the operator can trust. The apps in this portfolio are the result of that mindset applied to real businesses.
 
 ---
 
@@ -76,10 +92,10 @@ Each project folder is a **showcase only** — no source code, no configuration,
 
 ## About me
 
-- **Background:** self-taught developer focused on production systems for small businesses.
-- **Strengths:** end-to-end ownership — from data model to deployment — and a habit of solving real operational problems, not just writing code.
+- **Background:** self-taught developer with a strong background in lean manufacturing and continuous improvement, now focused on production systems for small businesses.
+- **Strengths:** end-to-end ownership — from data model to deployment — plus the ability to take improvement methodologies from theory to real application in administrative and industrial environments (production lines, quality, warehouse, logistics, maintenance).
+- **Approach:** I analyze the real problem first, then build the simplest system that solves it. If the business needs more automation or complexity, I design and build that too.
 - **Currently:** open to a full-time junior role where I can keep growing inside a team, and available for freelance work on e-commerce, booking, and internal tools.
-- **Languages:** Spanish (native), English (B2 — comfortable in technical and workplace communication).
 
 ---
 
