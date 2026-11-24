@@ -3,53 +3,99 @@
 ![Status](https://img.shields.io/badge/portfolio-active-brightgreen)
 ![Projects](https://img.shields.io/badge/projects-3-blue)
 ![Focus](https://img.shields.io/badge/focus-production%20systems-informational)
+![Open to](https://img.shields.io/badge/open%20to-junior%20roles%20%7C%20freelance-7c5e3c)
 
-I design and build full-stack web applications end to end — data model, authentication, admin tooling, deployment, and the small operational details that make software actually usable by real businesses. 
+I build full-stack web applications from start to finish: the data model, the login system, the admin tools, the deployment, and the small details that make software truly usable by real businesses.
 
-The three projects below are live (or in active development) products, not tutorials. Each one runs a real workflow for a real operator.
+The three projects below are **live products running real operations** — not tutorials or school exercises. Each one replaces a manual process for a real operator: a shop owner, a workshop teacher, a clinic doctor.
 
-This repository is a **showcase** — architecture notes, engineering decisions, and screenshots. Source code is private.
+This repository is a **showcase**. It holds architecture notes, engineering decisions, and screenshots. The source code is private because the apps are in active production.
 
 ---
 
 ## Projects
 
-| Project | What it is | Stack | Status | Links |
+| Project | What it does | Stack | Status | Links |
 | :--- | :--- | :--- | :--- | :--- |
-| **Élan Boutique** | Women's fashion e-commerce with per-variant inventory, order management, and an admin panel. | ![Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-4285F4?logo=google&logoColor=white) ![Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?logo=googlesheets&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white) ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white) | ![Status](https://img.shields.io/badge/status-live-brightgreen) | [Live](https://elan-boutique.pages.dev) · [Details →](./elan-boutique/README.md) |
-| **Taller Maché** | Art workshop booking + catalog with atomic capacity control and an order-request system. | ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white) ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white) | ![Status](https://img.shields.io/badge/status-live-brightgreen) | [Live](https://taller-mache.pages.dev) · [Details →](./taller-mache/README.md) |
-| **Nutrition App** | Clinic management platform: public booking, doctor panel, patient read-only panel, clinical history. | ![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white) ![D1](https://img.shields.io/badge/Cloudflare%20D1-F38020?logo=cloudflare&logoColor=white) | ![Status](https://img.shields.io/badge/status-live-brightgreen) | [Live](https://nutrition-app.razielrosas-m.workers.dev/) · [Details →](./nutrition-app/README.md) |
+| **Élan Boutique** | Fashion e-commerce with per-variant inventory (size × color), order tracking, and a private admin panel. Replaced manual social-media sales for a real boutique. | ![Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-4285F4?logo=google&logoColor=white) ![Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?logo=googlesheets&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white) ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white) | ![Status](https://img.shields.io/badge/status-live-brightgreen) | [Live](https://elan-boutique.pages.dev) · [Details →](./elan-boutique/README.md) |
+| **Taller Maché** | Art workshop booking and catalog with live seat availability, atomic capacity control, and order requests. Replaced WhatsApp bookings for a real workshop. | ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white) ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white) | ![Status](https://img.shields.io/badge/status-live-brightgreen) | [Live](https://taller-mache.pages.dev) · [Details →](./taller-mache/README.md) |
+| **NutriBalance** | Clinic management platform with public booking, a doctor panel, a read-only patient portal, and full clinical history. Replaced paper files for a real nutrition practice. | ![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white) ![D1](https://img.shields.io/badge/Cloudflare%20D1-F38020?logo=cloudflare&logoColor=white) | ![Status](https://img.shields.io/badge/status-live-brightgreen) | [Live](https://nutrition-app.razielrosas-m.workers.dev/) · [Details →](./nutrition-app/README.md) |
 
 ---
 
 ## What I focus on
 
-- **Data integrity.** Orders and bookings are transactional. Inventory decrements and workshop capacity are enforced atomically, meaning concurrent users cannot oversell stock or overbook a seat.
+- **Data integrity.** Orders and bookings are transactional. Stock decrements and workshop capacity are enforced atomically, so two customers cannot buy the last item or book the last seat at the same time.
 
-- **Security by default.** I use Row-Level Security where the platform supports it, app-layer authorization where it doesn't, alongside hashed credentials, secure session cookies, and rate-limited authentication.
+- **Security by default.** I use Row Level Security where the platform supports it, and app-layer authorization where it doesn't. Passwords are hashed, sessions live in secure cookies, and login is rate-limited against brute force.
 
-- **Real-world operations.** These apps are run by people, not test suites. Admin panels are built for the actual workflow: create, edit, publish, notify, and refund.
+- **Real-world operations.** These apps are used by people, not test suites. The admin panels follow the actual workflow: create, edit, publish, notify, and refund.
 
-- **Debugging under constraints.** When email deliverability dropped, or layout routing thrashed, the fixes came from reading the platform deeply, not from swapping stacks.
+- **Debugging under constraints.** When email delivery stopped working or routing broke, I found the cause by reading the platform deeply — not by switching stacks.
 
-- **Pragmatic product thinking.** Each app solves a specific business problem. Payments are intentionally out of scope where a human confirmation is the safer flow; login is scoped only to the panel that needs it.
+- **Pragmatic product thinking.** Each app solves one specific business problem. Online payment is intentionally left out where a human confirmation is safer. Login exists only where it is needed.
+
+---
+
+## Engineering highlights
+
+| Challenge | How I solved it |
+| :--- | :--- |
+| **Double-selling** (two customers, last unit) | Every order write is serialized through a server-side lock. Stock is reconciled inside the same transaction, so inventory stays accurate. |
+| **Overbooking** (two customers, last seat) | Booking runs through an atomic database function. The database itself rejects the operation if capacity would be exceeded. |
+| **Performance and quotas** | A three-layer cache (server cache, per-request memory, browser storage) keeps pages fast and reduces database reads. |
+| **Email that bounced** | I traced the error to the provider's free-plan restriction, isolated the email logic in one function, and moved to a provider with open delivery. |
+| **Protecting admin data** | Rotating server tokens with 12-hour expiry, hashed passwords, Row Level Security, and XSS escaping at every boundary. |
+| **Historical accuracy** | Orders capture an immutable price snapshot, so changing a product later never rewrites past receipts. |
+
+---
+
+## What each project replaced
+
+A quick view of the real-world impact, without the technical detail:
+
+| Project | Before | After |
+| :--- | :--- | :--- |
+| **Élan Boutique** | Stock tracked from memory, orders lost in chat, no sales data | Per-variant inventory, order history, live dashboard with revenue and low-stock alerts |
+| **Taller Maché** | Bookings over WhatsApp, no view of free seats, no product list | Live seat availability, booking records, product catalog, automatic confirmations |
+| **NutriBalance** | Paper files and phone bookings, no patient history | Online booking, structured clinical records, patient portal, automatic emails |
 
 ---
 
 ## Portfolio structure
 
-1. `README.md` (This file)
-2. `NOTICE.md` (Usage and licensing)
-3. `elan-boutique/` (Project README and screenshots folder)
-4. `taller-mache/` (Project README and screenshots folder)
-5. `nutrition-app/` (Project README and screenshots folder)
+1. `README.md` — this file
+2. `NOTICE.md` — usage and licensing
+3. `elan-boutique/` — project README and screenshots
+4. `taller-mache/` — project README and screenshots
+5. `nutrition-app/` — project README and screenshots
 
-Each project folder is a **showcase only** — no source code, no configuration, no credentials. Architecture, decisions, and screenshots live here; the working code lives in private repositories.
+Each project folder is a **showcase only** — no source code, no configuration, no credentials. The working code lives in private repositories.
 
 ---
 
-## Contact
+## About me
+
+- **Background:** self-taught developer focused on production systems for small businesses.
+- **Strengths:** end-to-end ownership — from data model to deployment — and a habit of solving real operational problems, not just writing code.
+- **Currently:** open to a full-time junior role where I can keep growing inside a team, and available for freelance work on e-commerce, booking, and internal tools.
+- **Languages:** Spanish (native), English (B2 — comfortable in technical and workplace communication).
+
+---
+
+## Work with me
+
+I am open to:
+
+- **Junior developer roles** — I want to bring this problem-solving mindset to a full-time engineering team.
+- **Freelance and contract work** — custom e-commerce, booking systems, and internal tools for small businesses.
+- **Collaborations** — lean, operator-first software.
+
+The admin panels are **not publicly accessible**. I am happy to do a live code walkthrough during an interview.
 
 **GitHub:** [@razielrosasm-cmd](https://github.com/razielrosasm-cmd)
 
-Admin panels are not publicly accessible. Walkthroughs are available on request during an interview or call.
+---
+<div align="center">
+<sub>Source code is private. This repository is a showcase of my production work.</sub>
+</div>
