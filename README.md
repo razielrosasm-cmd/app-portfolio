@@ -23,6 +23,26 @@ This repository is a **showcase**. It holds architecture notes, engineering deci
 
 ---
 
+## Lean thinking applied to software
+
+Before I wrote production software, I worked with **lean manufacturing and continuous improvement**. I am not new to this field: I have used these methods to analyze real problems and to move them from theory into practice — not only on the factory floor, but also in administrative and service processes.
+
+My experience covers process efficiency on both sides of a business:
+
+| Industrial processes | Administrative and business processes |
+| :--- | :--- |
+| Production lines | Accounting and financial flows |
+| Quality | Sales and marketing |
+| Warehouse | Customer service and follow-up |
+| Logistics | Order and booking management |
+| Maintenance | Inventory and purchasing |
+
+Lean does not only belong to manufacturing. The same principles — find the waste, remove the manual steps, standardize the flow, measure the result — apply just as well to a financial process, an administrative workflow, or a technology team. That is how I approach every project: I study how the work really happens, find where time and information are lost, and design a system the operator can trust.
+
+The apps in this portfolio are the result of that mindset. A boutique losing orders in chat, a workshop losing seats in WhatsApp, a clinic losing history in paper files — each one is a process with waste. Each solution removes the manual steps and gives the owner a clear, measurable flow.
+
+---
+
 ## What I focus on
 
 - **Data integrity.** Orders and bookings are transactional. Stock decrements and workshop capacity are enforced atomically, so two customers cannot buy the last item or book the last seat at the same time.
@@ -34,22 +54,6 @@ This repository is a **showcase**. It holds architecture notes, engineering deci
 - **Debugging under constraints.** When email delivery stopped working or routing broke, I found the cause by reading the platform deeply — not by switching stacks.
 
 - **Solutions that fit the requirement.** I design the system around what the business actually needs and can afford. When a client asks for more — online payments, automation, integrations — I build the more complex version. The goal is always to reduce process time with technology, at a cost the business can accept.
-
----
-
-## Continuous improvement background
-
-Before I wrote production software, I worked with **lean manufacturing methodologies and continuous improvement**. I am not new to this field: I have used these methods to analyze real administrative and industrial problems and to move them from theory into practice.
-
-My experience covers process efficiency in areas such as:
-
-- Production lines
-- Quality
-- Warehouse
-- Logistics
-- Maintenance
-
-This background is why I think about software the same way I think about a process: find the waste, remove the manual steps, and design a system that the operator can trust. The apps in this portfolio are the result of that mindset applied to real businesses.
 
 ---
 
