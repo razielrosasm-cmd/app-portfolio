@@ -117,7 +117,7 @@ I am currently open to:
 
 *Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.*
 
-**Reach me:** [your email] · [LinkedIn] · [GitHub]
+**Reach me:** [Email] · [LinkedIn] · [GitHub]
 
 ---
 <div align="center">
