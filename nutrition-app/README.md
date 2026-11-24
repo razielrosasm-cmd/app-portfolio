@@ -19,7 +19,7 @@ Online booking · doctor panel · patient portal · full clinical history — bu
 
 ## The Problem
 
-A nutrition clinic was running its whole practice on **paper files and WhatsApp**. Patient measurements, meal plans, and clinical notes lived in notebooks and spreadsheets. Booking was a phone call with no view of available times, and patients had no way to review their plan between visits. The doctor had no clear history of how a patient was progressing over time.
+A nutrition clinic was running its whole practice on **paper files and Social Media**. Patient measurements, meal plans, and clinical notes lived in notebooks and spreadsheets. Booking was a phone call with no view of available times, and patients had no way to review their plan between visits. The doctor had no clear history of how a patient was progressing over time.
 
 The practice needed a real system that matched how a clinic actually works.
 
