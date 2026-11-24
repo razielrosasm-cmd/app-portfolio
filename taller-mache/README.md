@@ -1,141 +1,158 @@
+<div align="center">
+
 # Taller Maché
 
-**Art workshop booking and catalog with atomic capacity control and an order-request flow.**
+### Replacing manual WhatsApp bookings with a structured booking and order system.
 
-![Status](https://img.shields.io/badge/status-live-brightgreen)
-![Type](https://img.shields.io/badge/type-booking%20%2B%20catalog-informational)
-![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)
-![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white)
-![Postgres](https://img.shields.io/badge/Postgres-4169E1?logo=postgresql&logoColor=white)
+Live seat availability · atomic capacity control · secure admin panel · real business running in production — built end-to-end at zero monthly cost.
 
-**Live site:** [https://taller-mache.pages.dev](https://taller-mache.pages.dev)
+[![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#status)
+[![Type](https://img.shields.io/badge/type-booking%20%2B%20catalog-informational?style=flat-square)](#)
+[![Built for](https://img.shields.io/badge/built%20for-a%20real%20business-7c5e3c?style=flat-square)](#the-problem)
+[![License](https://img.shields.io/badge/source-private-lightgrey?style=flat-square)](#)
 
----
+**[Live site](https://taller-mache.pages.dev)** · **[Screenshots](#screenshots)** · **[Get in touch](#work-with-me)**
 
-## The problem
-
-An art workshop (papel maché) was taking bookings over WhatsApp and selling finished pieces over DMs. Seats were limited and often oversold by accident when two people wrote at the same time. There was no way for customers to see available sessions, and no record of who had requested which piece. 
-
-The business needed a public booking page and a product catalog that respected real capacity — without an online payment gateway, because every order gets a human confirmation first.
-
-## The solution
-
-### Public site
-- Marketing home with a gallery of finished pieces.
-
-- Workshop calendar with per-session availability.
-
-- Booking flow with atomic capacity control — no overbooking, ever.
-
-- Product catalog with order-request flow (no online payment; owner confirms via WhatsApp).
-
-### Admin panel
-- Token-protected dashboard with bookings and order requests at a glance.
-
-- CRUD on workshops, sessions, products, and categories.
-
-- Order request management with status transitions and email triggers.
-
-- Capacity adjustments that stay consistent with the atomic RPCs used by the public booking flow.
+</div>
 
 ---
 
-## Tech stack
+## The Problem
 
-- **Frontend:** React + Vite + Tailwind.
+An art workshop teaching papel maché and cartonería was taking all bookings over WhatsApp and selling handmade pieces through direct messages. This created real problems:
 
-- **Backend & Data:** Supabase (Postgres, Auth, Row-Level Security, Edge Functions).
+- **Lost bookings.** Bookings were buried in chat threads with no record of who booked what or when.
+- **No capacity visibility.** The owner could not see how many seats were left without scrolling chat history. Overbooking happened by accident.
+- **No product catalog.** Customers could not browse prices or availability before messaging.
+- **Manual follow-up.** Every order required the owner to message each customer by hand.
 
-- **Hosting:** Cloudflare Pages.
+The business needed a simple digital front door that captured structured bookings and orders — while keeping WhatsApp as the final confirmation step, because that is how the owner and customers already communicate.
 
-- **Email:** Resend / Brevo (transactional emails).
+## What I Built
 
-- **Scheduling:** pg_cron for scheduled maintenance and keep-alive tasks.
+A production web application with a public site and a private admin panel that replaced the manual chat workflow end-to-end. Customers can now see available sessions, book a seat, and submit order requests. The owner uses a private dashboard to manage everything in one place.
+
+<div align="center">
+
+| Before (The Chat Chaos) | After (The Structured System) |
+|---|---|
+| Seats tracked from memory | Live seat availability per session, updated on every booking |
+| Bookings lost in chat threads | Booking records with customer details, status, and history |
+| No product listing | Product catalog with prices, images, and stock levels |
+| Manual WhatsApp confirmation for every lead | Automatic email confirmation to customer and owner, then a quick WhatsApp reply |
+| No record of what sold | Order and booking history visible in the admin panel |
+
+</div>
 
 ---
 
-## Architecture
+## Engineering Methodology
 
-1. The browser interacts with a React Single Page Application hosted on **Cloudflare Pages**.
+To make this system reliable for a real business, I had to solve several technical challenges.
 
-2. API requests route directly to **Supabase**.
+**1. Concurrency (Preventing Overbooking)**
+- **The Challenge:** Two customers booking the last seat at the same moment could both succeed, overselling the session.
+- **The Solution:** Booking and stock changes run through atomic database functions. The database itself rejects the operation if capacity would be exceeded, so two simultaneous users can never claim the last seat or the last unit.
 
-3. Data reads are filtered through strict **Row-Level Security (RLS)** policies.
+**2. Security (Protecting the Admin Panel)**
+- **The Challenge:** The admin panel holds customer names, phone numbers, and order data. It must be impossible for the public to read or write it.
+- **The Solution:** Every table has Row Level Security enabled. The public can only read catalog data. All writes require an authenticated staff account. The public key shipped to the browser is safe to expose because authorization lives in the database, not in the client.
 
-4. Data writes that affect capacity or stock route through **Postgres RPCs** to ensure absolute transactional integrity.
+**3. Data Integrity (Orders That Never Change)**
+- **The Challenge:** If a product price changes later, old orders must not be affected.
+- **The Solution:** Each order captures a snapshot of prices at the moment it is placed. Changing the product later does not alter past records.
 
-5. Email dispatches are handled by an **Edge Function** so provider credentials never touch the client.
+**4. Email Deliverability (A Real Production Problem)**
+- **The Challenge:** The original email provider blocked delivery to customer addresses on its free plan, so confirmation emails bounced.
+- **The Solution:** I diagnosed the cause by tracing the error through the server function, then planned the migration to a provider that allows free delivery to any recipient without buying a custom domain. The email logic sits in one isolated function, so switching providers was a small change, not a rewrite.
 
 ---
 
-## Notable engineering decisions
+## Zero-Cost Operations
 
-- **Atomic capacity RPCs.** Booking a seat calls `increment_workshop_capacity`; purchasing a product request calls `decrement_stock`. Both are transactional and reject on overflow — two simultaneous users can never claim the last seat or the last unit.
+The entire application runs at **$0 per month**, which matters for a small business:
 
-- **RLS on every table.** Public tables expose only what the public flow needs (available sessions, published products). Admin tables are gated by role and JWT. No write path bypasses RLS.
+- **Hosting:** Cloudflare Pages, free tier with global CDN and automatic deploys on every push.
+- **Database and authentication:** Supabase free tier, kept active by a scheduled daily database ping so the project never pauses from inactivity.
+- **Email:** Free transactional email tier, no custom domain required.
 
-- **Auth without the auth-bloat.** Admin credentials are hashed with bcrypt and sessions are issued server-side. There is no end-customer login because order requests and bookings do not require an account — the intent is a fast, low-friction public flow.
+This is a deliberate engineering decision: a real business should not need a paid plan just to take bookings online.
 
-- **Email deliverability debugging.** Resend's sandbox restriction blocked delivery to arbitrary recipients; diagnosed by tracing the response status through the Edge Function, then migrated the provider integration to Brevo for unrestricted transactional sends.
+---
 
-- **Absolute OG meta tags.** WhatsApp and most chat clients require absolute URLs in `og:` tags to render a link preview. Every public route emits absolute metadata so shared links resolve properly in messaging apps.
+## Architecture and Tech Stack
 
-- **CSP + HSTS on Cloudflare Pages.** Strict `Content-Security-Policy` and `Strict-Transport-Security` headers applied at the edge, hardening the public surface without adding a backend hop.
+The application is built with a lightweight, modern stack:
 
-- **Scheduled maintenance via pg_cron.** Session expiry and light cleanup run on the database side, so no external worker is needed for routine housekeeping.
+- **Frontend:** A React Single Page Application hosted on Cloudflare Pages, built with Vite and styled with Tailwind CSS.
+- **Backend and Database:** Supabase (Postgres) with Row Level Security on every table.
+- **Authentication:** Supabase Auth with securely hashed passwords. No public signup — admin accounts are created manually.
+- **Server Logic:** Supabase Edge Functions for email sending, so provider credentials never reach the browser.
+- **Scheduling:** A database cron job for automatic maintenance and keep-alive.
+- **Security Headers:** Strict Content Security Policy and HTTPS enforcement applied at the edge.
 
 ---
 
 ## Screenshots
 
-> Redaction note: customer names, emails, phone numbers, and order IDs are obscured in published screenshots.
+<div align="center">
 
-![Public home](./screenshots/public-home.png)
-*Caption: Public home — workshop identity and featured pieces.*
+### Public Site
+| | |
+|---|---|
+| ![Home](./screenshots/public-home.png) <br/> **Home** — workshop identity and featured pieces | ![Gallery](./screenshots/gallery.png) <br/> **Gallery** — finished papel maché work |
+| ![Booking](./screenshots/workshop-booking.png) <br/> **Booking** — live seat availability | ![Order](./screenshots/order-request.png) <br/> **Order request** — no online payment |
 
-![Gallery](./screenshots/gallery.png)
-*Caption: Gallery of finished papel maché pieces.*
+### Admin Panel
+| | |
+|---|---|
+| ![Dashboard](./screenshots/admin-dashboard.png) <br/> **Dashboard** — bookings and pending requests | ![Workshops](./screenshots/admin-workshops.png) <br/> **Workshops** — capacity controls |
+| ![Products](./screenshots/admin-products.png) <br/> **Products** — catalog and stock | ![Orders](./screenshots/admin-orders.png) <br/> **Orders** — status management |
 
-![Workshop booking](./screenshots/workshop-booking.png)
-*Caption: Workshop booking with live seat availability.*
+</div>
 
-![Order request](./screenshots/order-request.png)
-*Caption: Product order-request flow — human-confirmed, no online payment.*
-
-![Admin login](./screenshots/login.png)
-*Caption: Admin login (screenshot only — not publicly accessible).*
-
-![Admin dashboard](./screenshots/admin-dashboard.png)
-*Caption: Admin dashboard — bookings and pending requests.*
-
-![Admin workshops](./screenshots/admin-workshops.png)
-*Caption: Workshop list with capacity controls.*
-
-![Admin sessions](./screenshots/admin-sessions.png)
-*Caption: Session scheduling and availability.*
-
-![Admin products](./screenshots/admin-products.png)
-*Caption: Product catalog with stock levels.*
-
-![Admin orders](./screenshots/admin-orders.png)
-*Caption: Order request management with status transitions.*
+*Customer names, emails, phone numbers, and order IDs are obscured in published screenshots for privacy.*
 
 ---
 
 ## Status
 
-**Live in production**, used by a real business. Booking and catalog flows are stable; maintenance is focused on content and small UX improvements.
+**Live in production**, used by a real business. Booking and catalog flows are stable. Current work focuses on content updates and small UX improvements.
 
-### Roadmap / known limitations
-- No online payment — by design; the owner confirms each order manually.
-
-- No end-customer login — bookings and requests are anonymous by intent.
-
-- Reporting is operator-facing only; customer-facing order tracking is out of scope.
+### Roadmap and known limitations
+- **No online payment** — by design; the owner confirms each order personally over WhatsApp.
+- **No customer accounts** — bookings and requests are anonymous on purpose, to keep the public flow fast and low-friction.
+- **Design refresh** — planned, not urgent.
 
 ---
 
-*Source code is private. This folder is a showcase only.*
+## What This Project Demonstrates
+
+For hiring managers and technical recruiters, this project shows:
+
+- **Full-stack ownership** — database design, security policies, server functions, frontend, and deployment.
+- **Production thinking** — the app is deployed, used by a real business, and handles real customer data.
+- **Security awareness** — authentication, row-level authorization, secret hygiene, and secure headers.
+- **Data correctness** — atomic operations that prevent race conditions, not client-side checks.
+- **Cost engineering** — a real business running at zero monthly cost.
+- **Real debugging** — diagnosed a non-obvious email delivery problem and chose the correct free alternative.
+
+---
+
+## Work With Me
+
+I built Taller Maché as a real production system for a real business. The admin panel is **not publicly accessible**; access is limited to the owner.
+
+I am currently open to:
+- **Junior Developer Roles:** I am eager to bring this problem-solving approach to a full-time engineering team.
+- **Freelance and Contract Work:** Building custom booking systems, catalogs, and internal tools for small businesses.
+- **Collaborations:** Partnering on lean, operator-first software.
+
+*Note: The source code is private because it is actively used in production. I am happy to do a live code walkthrough during an interview.*
+
+**Reach me:** [Email] · [LinkedIn] · [https://github.com/razielrosasm-cmd]
+
+---
+<div align="center">
+<sub>Source code is private. This repository is a showcase of my production work.</sub>
+</div>
