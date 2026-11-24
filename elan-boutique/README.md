@@ -117,7 +117,7 @@ I am currently open to:
 
 *Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.*
 
-**Reach me:** [Email] · [LinkedIn] · [GitHub]
+**Reach me:** [Email] · [LinkedIn] · [https://github.com/razielrosasm-cmd]
 
 ---
 <div align="center">
