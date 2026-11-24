@@ -25,17 +25,19 @@ This repository is a **showcase**. It holds architecture notes, engineering deci
 
 ## Lean thinking applied to software
 
-Before I wrote production software, I worked with **lean manufacturing and continuous improvement**. I am not new to this field: I have used these methods to analyze real problems and to move them from theory into practice — not only on the factory floor, but also in administrative and service processes.
+Before I wrote production software, I worked with **lean manufacturing and continuous improvement**. I am not new to this field: I have used these methods to analyze real problems and to move them from theory into practice — in administrative and service processes, and also on the factory floor.
 
-My experience covers process efficiency on both sides of a business:
+My experience covers process efficiency on both sides of a business. The administrative side comes first here, because it is where most of my work applies:
 
-| Industrial processes | Administrative and business processes |
+| Administrative and business processes | Industrial processes |
 | :--- | :--- |
-| Production lines | Accounting and financial flows |
-| Quality | Sales and marketing |
-| Warehouse | Customer service and follow-up |
-| Logistics | Order and booking management |
-| Maintenance | Inventory and purchasing |
+| Accounting and financial flows | Production lines |
+| Sales and marketing | Quality |
+| Customer service and follow-up | Warehouse |
+| Order and booking management | Logistics |
+| Inventory and purchasing | Maintenance |
+
+Most of my improvement work has been in administrative areas: financial flows, sales and marketing, customer follow-up, order and booking management, and inventory and purchasing. These are the processes where waste is often invisible — an order lost in a chat, a booking handled twice, a report rebuilt by hand every week — and where the right system saves the most time.
 
 Lean does not only belong to manufacturing. The same principles — find the waste, remove the manual steps, standardize the flow, measure the result — apply just as well to a financial process, an administrative workflow, or a technology team. That is how I approach every project: I study how the work really happens, find where time and information are lost, and design a system the operator can trust.
 
@@ -97,7 +99,7 @@ Each project folder is a **showcase only** — no source code, no configuration,
 ## About me
 
 - **Background:** self-taught developer with a strong background in lean manufacturing and continuous improvement, now focused on production systems for small businesses.
-- **Strengths:** end-to-end ownership — from data model to deployment — plus the ability to take improvement methodologies from theory to real application in administrative and industrial environments (production lines, quality, warehouse, logistics, maintenance).
+- **Strengths:** end-to-end ownership — from data model to deployment — plus the ability to take improvement methodologies from theory to real application, mainly in administrative environments (accounting, sales and marketing, customer follow-up, order management, inventory) and also in industrial ones (production lines, quality, warehouse, logistics, maintenance).
 - **Approach:** I analyze the real problem first, then build the simplest system that solves it. If the business needs more automation or complexity, I design and build that too.
 - **Currently:** open to a full-time junior role where I can keep growing inside a team, and available for freelance work on e-commerce, booking, and internal tools.
 
