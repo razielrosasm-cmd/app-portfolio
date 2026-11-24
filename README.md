@@ -101,7 +101,7 @@ Each project folder is a **showcase only** — no source code, no configuration,
 - **Background:** self-taught developer with a strong background in lean manufacturing and continuous improvement, now focused on production systems for small businesses.
 - **Strengths:** end-to-end ownership — from data model to deployment — plus the ability to take improvement methodologies from theory to real application, mainly in administrative environments (accounting, sales and marketing, customer follow-up, order management, inventory) and also in industrial ones (production lines, quality, warehouse, logistics, maintenance).
 - **Approach:** I analyze the real problem first, then build the simplest system that solves it. If the business needs more automation or complexity, I design and build that too.
-- **Currently:** open to a full-time junior role where I can keep growing inside a team, and available for freelance work on e-commerce, booking, and internal tools.
+- **Currently:** open to a full-time role where I can keep growing inside a team, and available for freelance work on e-commerce, booking, and internal tools.
 
 ---
 
