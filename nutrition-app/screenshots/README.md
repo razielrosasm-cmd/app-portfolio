@@ -1,6 +1,6 @@
 # Nutrition App — screenshots (WIP)
 
-Place PNG screenshots here with these exact filenames:
+Place PNG screenshots:
 
 - `public-booking.png`
 
@@ -16,6 +16,5 @@ Place PNG screenshots here with these exact filenames:
 
 - `patient-panel.png`
 
-Use **fictional or fully redacted** patient data. Because this app is in development, label screenshots visibly as WIP in your image caption context (the README already notes it).
+Use **fictional or fully redacted** patient data. Because this app is in development.
 
-Recommended capture size: **1440×900** or larger, full page, PNG.
