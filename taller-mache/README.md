@@ -4,7 +4,7 @@
 
 ### Replacing manual WhatsApp bookings with a structured booking and order system.
 
-Live seat availability · atomic capacity control · secure admin panel · real business running in production — built end-to-end at zero monthly cost.
+Live seat availability · atomic capacity control · secure admin panel · built for a real business, running in production.
 
 [![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#status)
 [![Type](https://img.shields.io/badge/type-booking%20%2B%20catalog-informational?style=flat-square)](#)
@@ -19,18 +19,13 @@ Live seat availability · atomic capacity control · secure admin panel · real 
 
 ## The Problem
 
-An art workshop teaching papel maché and cartonería was taking all bookings over WhatsApp and selling handmade pieces through direct messages. This created real problems:
+An art workshop teaching papel maché and cartonería was taking **all bookings over WhatsApp** and selling handmade pieces through **direct messages**. Seats were limited, and bookings were often lost in chat threads. The owner had **no way to see available seats** and **no record of what had been ordered**.
 
-- **Lost bookings.** Bookings were buried in chat threads with no record of who booked what or when.
-- **No capacity visibility.** The owner could not see how many seats were left without scrolling chat history. Overbooking happened by accident.
-- **No product catalog.** Customers could not browse prices or availability before messaging.
-- **Manual follow-up.** Every order required the owner to message each customer by hand.
-
-The business needed a simple digital front door that captured structured bookings and orders — while keeping WhatsApp as the final confirmation step, because that is how the owner and customers already communicate.
+The business needed a real booking page and catalog that respected real capacity.
 
 ## What I Built
 
-A production web application with a public site and a private admin panel that replaced the manual chat workflow end-to-end. Customers can now see available sessions, book a seat, and submit order requests. The owner uses a private dashboard to manage everything in one place.
+A production website and a private admin panel that replaced the chat workflow end-to-end. Customers can now see available sessions, book a seat, and submit order requests. The owner uses a private dashboard to manage bookings and orders in one place.
 
 <div align="center">
 
@@ -68,28 +63,26 @@ To make this system reliable for a real business, I had to solve several technic
 
 ---
 
-## Zero-Cost Operations
+## Business Intelligence
 
-The entire application runs at **$0 per month**, which matters for a small business:
-
-- **Hosting:** Cloudflare Pages, free tier with global CDN and automatic deploys on every push.
-- **Database and authentication:** Supabase free tier, kept active by a scheduled daily database ping so the project never pauses from inactivity.
-- **Email:** Free transactional email tier, no custom domain required.
-
-This is a deliberate engineering decision: a real business should not need a paid plan just to take bookings online.
+The system does more than take bookings; it gives the owner a clear view of the business:
+- **Live capacity view:** seats remaining per session, visible before and after every booking.
+- **Order history:** every request captured with customer details and status, so nothing is lost in chat.
+- **Catalog control:** products, prices, and stock managed in one place.
+- **Cost awareness:** the entire system runs at zero monthly cost, so every peso stays in the business.
 
 ---
 
 ## Architecture and Tech Stack
 
-The application is built with a lightweight, modern stack:
+The application is built with a lightweight, modern architecture:
 
-- **Frontend:** A React Single Page Application hosted on Cloudflare Pages, built with Vite and styled with Tailwind CSS.
+- **Frontend:** Cloudflare Pages hosting a responsive Single Page Application built with React, Vite, and Tailwind CSS.
 - **Backend and Database:** Supabase (Postgres) with Row Level Security on every table.
 - **Authentication:** Supabase Auth with securely hashed passwords. No public signup — admin accounts are created manually.
 - **Server Logic:** Supabase Edge Functions for email sending, so provider credentials never reach the browser.
 - **Scheduling:** A database cron job for automatic maintenance and keep-alive.
-- **Security Headers:** Strict Content Security Policy and HTTPS enforcement applied at the edge.
+- **Notifications:** Automated confirmation emails to the customer and the owner, with WhatsApp as the final human confirmation step.
 
 ---
 
@@ -115,40 +108,16 @@ The application is built with a lightweight, modern stack:
 
 ---
 
-## Status
-
-**Live in production**, used by a real business. Booking and catalog flows are stable. Current work focuses on content updates and small UX improvements.
-
-### Roadmap and known limitations
-- **No online payment** — by design; the owner confirms each order personally over WhatsApp.
-- **No customer accounts** — bookings and requests are anonymous on purpose, to keep the public flow fast and low-friction.
-- **Design refresh** — planned, not urgent.
-
----
-
-## What This Project Demonstrates
-
-For hiring managers and technical recruiters, this project shows:
-
-- **Full-stack ownership** — database design, security policies, server functions, frontend, and deployment.
-- **Production thinking** — the app is deployed, used by a real business, and handles real customer data.
-- **Security awareness** — authentication, row-level authorization, secret hygiene, and secure headers.
-- **Data correctness** — atomic operations that prevent race conditions, not client-side checks.
-- **Cost engineering** — a real business running at zero monthly cost.
-- **Real debugging** — diagnosed a non-obvious email delivery problem and chose the correct free alternative.
-
----
-
 ## Work With Me
 
-I built Taller Maché as a real production system for a real business. The admin panel is **not publicly accessible**; access is limited to the owner.
+I built Taller Maché as a real production system for a real business. The admin panel is **not publicly reachable**; access is scoped to the owner.
 
 I am currently open to:
-- **Junior Developer Roles:** I am eager to bring this problem-solving approach to a full-time engineering team.
-- **Freelance and Contract Work:** Building custom booking systems, catalogs, and internal tools for small businesses.
+- **Junior Developer Roles:** I am eager to bring this problem-solving mindset to a full-time engineering team.
 - **Collaborations:** Partnering on lean, operator-first software.
+- **Freelance and Contract Work:** Building custom booking systems, catalogs, and internal tools.
 
-*Note: The source code is private because it is actively used in production. I am happy to do a live code walkthrough during an interview.*
+*Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.*
 
 **Reach me:** [Email] · [LinkedIn] · [https://github.com/razielrosasm-cmd]
 
