@@ -4,7 +4,7 @@
 
 ### Replacing paper files and WhatsApp booking with a complete clinic management system.
 
-Public booking · doctor panel · patient read-only portal · full clinical history — built for a real nutrition practice, running in production.
+Online booking · doctor panel · patient portal · full clinical history — built for a real nutrition practice, running in production.
 
 [![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#status)
 [![Type](https://img.shields.io/badge/type-clinic%20management-informational?style=flat-square)](#)
@@ -19,76 +19,65 @@ Public booking · doctor panel · patient read-only portal · full clinical hist
 
 ## The Problem
 
-A nutrition clinic was running its entire practice on **paper files and WhatsApp**. Patient measurements, meal plans, exercise routines, and clinical notes were spread across notebooks and spreadsheets. Booking was a phone conversation with no view of available slots, and patients had no way to review their plan between appointments. The doctor had no structured history of a patient's clinical progress.
+A nutrition clinic was running its whole practice on **paper files and WhatsApp**. Patient measurements, meal plans, and clinical notes lived in notebooks and spreadsheets. Booking was a phone call with no view of available times, and patients had no way to review their plan between visits. The doctor had no clear history of how a patient was progressing over time.
 
 The practice needed a real system that matched how a clinic actually works.
 
 ## What I Built
 
-A production web application that replaced the paper workflow end-to-end. Patients book online and receive a confirmation email with their appointment details. The doctor manages patients, measurements, plans, and routines from a private dashboard. Patients log in to a read-only portal to review their current plan and history.
+A working web application that replaced the paper workflow from start to finish. Patients book online and receive a confirmation email with their appointment details. The doctor manages patients, measurements, and plans from a private dashboard. Patients log in to a read-only portal to review their current plan and history.
 
 <div align="center">
 
 | Before (Paper and WhatsApp) | After (The Automated System) |
 |---|---|
-| Booking by phone with no availability view | Public booking page with live available slots |
-| Patient history in notebooks and spreadsheets | Structured clinical record per patient: measurements, weight, BMI, plans, routines |
-| Patients had no way to review their plan | Read-only patient portal with current plan and history |
-| Manual WhatsApp confirmation | Automated confirmation emails for doctor and patient |
-| No separation between doctor and patient data | Role-based access with secure sessions on both sides |
+| Booking by phone, no view of free slots | Public booking page with live availability |
+| Patient history spread across notebooks | One structured record per patient: measurements, plans, history |
+| Patients could not review their plan | Read-only patient portal, always available |
+| Manual WhatsApp confirmation | Automatic confirmation emails to doctor and patient |
+| No separation between doctor and patient data | Secure, role-based access on both sides |
 
 </div>
 
 ---
 
-## Engineering Methodology
+## How I Solved It
 
-To make this system reliable for a real practice, I had to solve several technical challenges.
+To make this system reliable for a real practice, I had to solve four concrete problems.
 
-**1. Serverless runtime, real database.**
-*   **The Challenge:** The app needed to run on Cloudflare's edge network with a real relational database, not a toy store.
-*   **The Solution:** Cloudflare D1 (serverless SQLite) accessed through Next.js Route Handlers. Mutations are explicit HTTP requests, not Server Actions — the request/response contract is auditable end to end.
+**1. Booking that never loses an appointment.**
+*   The system saves every appointment to a real database the moment the patient submits the form, before anything else happens. If email delivery fails, the appointment is still confirmed and the patient is not affected.
 
-**2. Reliable background jobs.**
-*   **The Challenge:** Sending confirmation emails from a serverless Worker after the HTTP response is returned. Fire-and-forget promises are silently killed when the response flushes.
-*   **The Solution:** Notification calls are awaited with explicit error handling. The booking is committed to the database first, so a failed email never rolls back a confirmed appointment.
+**2. Confirmations that actually arrive.**
+*   The most common failure in serverless apps is work that is started but never finishes, because the server stops the moment it responds to the user. I made the notification step wait for completion and handle errors explicitly, so both doctor and patient receive their email every time.
 
-**3. Auth that works on the edge.**
-*   **The Challenge:** Cloudflare Workers do not expose Node's `crypto` module, but the auth layer needs proper password hashing.
-*   **The Solution:** PBKDF2 through the Web Crypto API. No Node dependencies, so the same auth code runs unchanged on the edge runtime. Sessions are signed, expiry-scoped, and stored in httpOnly cookies — never in `localStorage`.
+**3. Secure login without heavy infrastructure.**
+*   Passwords are hashed with a modern, standard algorithm, and sessions are stored in secure cookies that JavaScript cannot read. The doctor and the patient see completely different parts of the app, and the server enforces that separation on every request.
 
-**4. Security and data isolation without RLS.**
-*   **The Challenge:** D1 is serverless SQLite and does not offer Row-Level Security. Every query has to be scoped correctly in application code.
-*   **The Solution:** Authorization is enforced at the handler level. Doctor routes and patient routes are separated by role, and every query is scoped to the authenticated user. Patients can only read their own records.
-
-**5. Mobile-first for the way clinics actually work.**
-*   **The Challenge:** Doctors update notes between appointments, on a phone. A desktop-only layout would be unusable.
-*   **The Solution:** The doctor and patient panels are designed for phone use first. The sidebar, forms, and reading views are all tuned for small screens before desktop.
+**4. A layout that works on a phone first.**
+*   Doctors update notes between appointments, on their phone. I designed the panels for small screens first and scaled up to desktop, instead of the other way around.
 
 ---
 
-## Business Value
+## What the Practice Gains
 
-The system does more than store records; it removes the daily friction of running a practice.
-
-*   **Booking without phone calls.** Patients see real availability and book in under a minute.
-*   **Clinical history at a glance.** The doctor opens a patient and sees weight, BMI, plans, and routines in one place.
-*   **Patients stay engaged between visits.** The read-only portal keeps the current plan available on the patient's phone.
-*   **Confirmation without manual work.** Both doctor and patient receive an email the moment a booking is confirmed.
-*   **One system of record.** Measurements, plans, routines, and notes live in one place instead of three.
+*   **Bookings without phone calls.** Patients see real availability and confirm in under a minute.
+*   **A clinical history at a glance.** The doctor opens a patient and sees the full record in one place.
+*   **Patients stay on track.** The portal keeps the current plan on the patient's phone, between visits.
+*   **No manual confirmation work.** Both sides receive an email automatically.
+*   **One system of record.** Measurements, plans, and notes live in one place instead of three.
 
 ---
 
-## Architecture and Tech Stack
+## Built With
 
-The application is built on a modern, serverless stack that runs entirely on Cloudflare's edge network:
+A modern, serverless stack that runs entirely on the cloud, with no dedicated server to maintain:
 
-*   **Frontend:** Next.js 15 (App Router) + React 19 + TypeScript, styled with Tailwind CSS and Base UI.
-*   **Backend:** Next.js Route Handlers, deployed to Cloudflare Workers through OpenNext.
-*   **Database:** Cloudflare D1 (serverless SQLite) accessed through typed database bindings.
-*   **Email:** Brevo transactional API for booking confirmations to both doctor and patient.
-*   **Auth:** Custom session layer using PBKDF2 hashing via Web Crypto and httpOnly cookies.
-*   **Hosting:** Cloudflare Workers with the Node.js compatibility layer enabled.
+*   **Frontend:** Next.js and React for the user interface.
+*   **Backend:** Route handlers running on Cloudflare's global network.
+*   **Database:** Cloudflare D1, a serverless SQL database.
+*   **Email:** Brevo for transactional emails.
+*   **Authentication:** Custom session layer using secure cookies.
 
 ---
 
@@ -121,16 +110,16 @@ The application is built on a modern, serverless stack that runs entirely on Clo
 
 ## Work With Me
 
-I built NutriBalance as a real production system for a real nutrition practice. The doctor and patient panels are **not publicly reachable**; access is scoped to authenticated users.
+I built NutriBalance as a real production system for a real nutrition practice. The doctor and patient panels are **not publicly reachable**; access is limited to authenticated users.
 
 I am currently open to:
 *   **Junior Developer Roles:** I am looking to bring this problem-solving mindset to a full-time engineering team.
 *   **Collaborations:** Partnering on lean, operator-first software for small businesses.
 *   **Freelance and Contract Work:** Building custom booking systems, internal tools, and clinical management platforms.
 
-*Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.*
+*Note: The source code is private because the app is actively used in production. I am happy to do a live code walkthrough during an interview.*
 
-**Reach me:** [Email](mailto:razielrosas.m@gmail.com) · [LinkedIn](https://www.linkedin.com/in/raziel-rosas) · [https://github.com/razielrosasm-cmd](https://github.com/razielrosasm-cmd)
+**Reach me:** [Email](mailto:razielrosas.m@gmail.com) · [LinkedIn](https://www.linkedin.com/in/raziel-rosas) · [GitHub](https://github.com/razielrosasm-cmd)
 
 ---
 <div align="center">
