@@ -1,136 +1,138 @@
-# Nutrition App — Consultorio Nutriológico
+<div align="center">
 
-**Clinic management platform: public booking, doctor panel, patient read-only panel, and full clinical history.**
+# NutriBalance
 
-![Status](https://img.shields.io/badge/status-in%20development-yellow)
-![Type](https://img.shields.io/badge/type-clinic%20management-informational)
-![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white)
-![D1](https://img.shields.io/badge/Cloudflare%20D1-F38020?logo=cloudflare&logoColor=white)
-![Cloudflare](https://img.shields.io/badge/Cloudflare%20Pages-F38020?logo=cloudflare&logoColor=white)
+### Replacing paper files and WhatsApp booking with a complete clinic management system.
 
-**Live link:** Coming soon
+Public booking · doctor panel · patient read-only portal · full clinical history — built for a real nutrition practice, running in production.
 
-> ⚠️ **In development.** Features and screenshots are work-in-progress and may change.
+[![Status](https://img.shields.io/badge/status-live-brightgreen?style=flat-square)](#status)
+[![Type](https://img.shields.io/badge/type-clinic%20management-informational?style=flat-square)](#)
+[![Built for](https://img.shields.io/badge/built%20for-a%20real%20practice-2d6a4f?style=flat-square)](#the-problem)
+[![License](https://img.shields.io/badge/source-private-lightgrey?style=flat-square)](#)
 
----
+**[Live app](https://nutrition-app.razielrosas-m.workers.dev)** · **[Screenshots](#screenshots)** · **[Get in touch](#work-with-me)**
 
-## The problem
-
-A nutrition clinic tracked patient history, measurements, meal plans, and routines across paper files and spreadsheets. Booking was done over WhatsApp with no availability view. Patients had no way to review their plan between appointments, and the doctor had no structured way to look back at a patient's clinical trajectory.
-
-## The solution
-
-### Public
-- Booking page with available appointment slots.
-
-### Doctor panel
-- Patient list with clinical summaries.
-
-- Full history per patient: measurements, weight, BMI, plans, routines.
-
-- Plan editor and routine assignment.
-
-- Appointment overview.
-
-### Patient panel (read-only)
-- View current plan, routine, and measurement history.
-
-- No editing — data flows one way from the doctor.
-
-### System
-- Automated WhatsApp confirmation links on booking.
-
-- Role-based access separating doctor and patient views.
+</div>
 
 ---
 
-## Tech stack
+## The Problem
 
-- **Frontend:** Next.js (App Router) + React + TypeScript + Tailwind + shadcn/ui.
+A nutrition clinic was running its entire practice on **paper files and WhatsApp**. Patient measurements, meal plans, exercise routines, and clinical notes were spread across notebooks and spreadsheets. Booking was a phone conversation with no view of available slots, and patients had no way to review their plan between appointments. The doctor had no structured history of a patient's clinical progress.
 
-- **Backend & Data:** Cloudflare D1 (serverless SQLite) accessed through Next.js Route Handlers.
+The practice needed a real system that matched how a clinic actually works.
 
-- **Hosting:** Cloudflare Pages (edge runtime).
+## What I Built
 
-- **Email / Notifications:** Brevo API.
+A production web application that replaced the paper workflow end-to-end. Patients book online and receive a confirmation email with their appointment details. The doctor manages patients, measurements, plans, and routines from a private dashboard. Patients log in to a read-only portal to review their current plan and history.
 
-- **Auth:** Custom session layer (PBKDF2 hashing via Web Crypto, secure cookies).
+<div align="center">
 
----
+| Before (Paper and WhatsApp) | After (The Automated System) |
+|---|---|
+| Booking by phone with no availability view | Public booking page with live available slots |
+| Patient history in notebooks and spreadsheets | Structured clinical record per patient: measurements, weight, BMI, plans, routines |
+| Patients had no way to review their plan | Read-only patient portal with current plan and history |
+| Manual WhatsApp confirmation | Automated confirmation emails for doctor and patient |
+| No separation between doctor and patient data | Role-based access with secure sessions on both sides |
 
-## Architecture
-
-1. The browser connects to the **Next.js application** hosted on Cloudflare Pages (running on the Edge runtime).
-
-2. Page renders happen server-side. 
-
-3. Mutations flow through explicit Next.js **Route Handlers** rather than Server Actions.
-
-4. The handlers communicate directly with **Cloudflare D1** (serverless SQLite) via database bindings.
-
-5. Session state is securely managed via **httpOnly cookies**.
+</div>
 
 ---
 
-## Notable engineering decisions
+## Engineering Methodology
 
-- **D1 bindings via Route Handlers, not Server Actions.** Server Actions intermittently failed when interacting with D1 bindings under the Edge runtime. Routing all mutations through explicit `POST`/`PUT` Route Handlers sidesteps the issue and makes the request/response contract auditable.
+To make this system reliable for a real practice, I had to solve several technical challenges.
 
-- **Edge-compatible password hashing.** PBKDF2 via the Web Crypto API — no Node `crypto` dependency, so the auth layer runs unchanged on the Edge runtime alongside the rest of the app.
+**1. Serverless runtime, real database.**
+*   **The Challenge:** The app needed to run on Cloudflare's edge network with a real relational database, not a toy store.
+*   **The Solution:** Cloudflare D1 (serverless SQLite) accessed through Next.js Route Handlers. Mutations are explicit HTTP requests, not Server Actions — the request/response contract is auditable end to end.
 
-- **App-layer authorization.** D1 is serverless SQLite and does not offer Row-Level Security. Every query is scoped by the authenticated user's role in the app layer — doctor queries and patient queries are separated at the handler level, not the database level.
+**2. Reliable background jobs.**
+*   **The Challenge:** Sending confirmation emails from a serverless Worker after the HTTP response is returned. Fire-and-forget promises are silently killed when the response flushes.
+*   **The Solution:** Notification calls are awaited with explicit error handling. The booking is committed to the database first, so a failed email never rolls back a confirmed appointment.
 
-- **httpOnly cookie sessions.** No tokens in `localStorage`. Sessions are signed, expiry-scoped, and never exposed to client-side JS.
+**3. Auth that works on the edge.**
+*   **The Challenge:** Cloudflare Workers do not expose Node's `crypto` module, but the auth layer needs proper password hashing.
+*   **The Solution:** PBKDF2 through the Web Crypto API. No Node dependencies, so the same auth code runs unchanged on the edge runtime. Sessions are signed, expiry-scoped, and stored in httpOnly cookies — never in `localStorage`.
 
-- **Routing fix for layout thrashing.** Next.js `<Link>` navigation was causing visible layout re-flow in the panel shell. Replaced with plain `<a>` hard navigation for the affected routes — a small, deliberate tradeoff: slower transitions, but a shell that renders correctly every time.
+**4. Security and data isolation without RLS.**
+*   **The Challenge:** D1 is serverless SQLite and does not offer Row-Level Security. Every query has to be scoped correctly in application code.
+*   **The Solution:** Authorization is enforced at the handler level. Doctor routes and patient routes are separated by role, and every query is scoped to the authenticated user. Patients can only read their own records.
 
-- **Mobile-first responsive.** Doctor and patient panels are designed for phone use first — the doctor often updates notes between appointments.
+**5. Mobile-first for the way clinics actually work.**
+*   **The Challenge:** Doctors update notes between appointments, on a phone. A desktop-only layout would be unusable.
+*   **The Solution:** The doctor and patient panels are designed for phone use first. The sidebar, forms, and reading views are all tuned for small screens before desktop.
+
+---
+
+## Business Value
+
+The system does more than store records; it removes the daily friction of running a practice.
+
+*   **Booking without phone calls.** Patients see real availability and book in under a minute.
+*   **Clinical history at a glance.** The doctor opens a patient and sees weight, BMI, plans, and routines in one place.
+*   **Patients stay engaged between visits.** The read-only portal keeps the current plan available on the patient's phone.
+*   **Confirmation without manual work.** Both doctor and patient receive an email the moment a booking is confirmed.
+*   **One system of record.** Measurements, plans, routines, and notes live in one place instead of three.
+
+---
+
+## Architecture and Tech Stack
+
+The application is built on a modern, serverless stack that runs entirely on Cloudflare's edge network:
+
+*   **Frontend:** Next.js 15 (App Router) + React 19 + TypeScript, styled with Tailwind CSS and Base UI.
+*   **Backend:** Next.js Route Handlers, deployed to Cloudflare Workers through OpenNext.
+*   **Database:** Cloudflare D1 (serverless SQLite) accessed through typed database bindings.
+*   **Email:** Brevo transactional API for booking confirmations to both doctor and patient.
+*   **Auth:** Custom session layer using PBKDF2 hashing via Web Crypto and httpOnly cookies.
+*   **Hosting:** Cloudflare Workers with the Node.js compatibility layer enabled.
 
 ---
 
 ## Screenshots
 
-> ⚠️ **Work-in-progress screenshots.** These represent current in-development UI and may change before release. Customer names and clinical data are fictional or redacted.
+<div align="center">
 
-![Public booking](./screenshots/public-booking.png)
-*Caption: Public booking page — available appointment slots.*
+### Public site and booking
+| | |
+|---|---|
+| ![Home](./screenshots/public-home.png) <br/> **Home** — practice overview | ![Booking](./screenshots/public-booking.png) <br/> **Booking** — available slots |
+| ![Confirmation](./screenshots/public-booking-confirmed.png) <br/> **Confirmation** — booking banner | ![Services](./screenshots/public-services.png) <br/> **Services** — offered consultations |
 
-![Doctor dashboard](./screenshots/doctor-dashboard.png)
-*Caption: Doctor dashboard — today's appointments and patient overview.*
+### Doctor panel
+| | |
+|---|---|
+| ![Dashboard](./screenshots/doctor-dashboard.png) <br/> **Dashboard** — today's appointments | ![Patients](./screenshots/doctor-patients.png) <br/> **Patients** — list with clinical summary |
+| ![Measurements](./screenshots/doctor-measurements.png) <br/> **Measurements** — weight and BMI history | ![Plans](./screenshots/doctor-plans.png) <br/> **Plans** — meal plan editor |
 
-![Patient list](./screenshots/patient-list.png)
-*Caption: Patient list with search and clinical summary.*
+### Patient portal
+| | |
+|---|---|
+| ![Patient panel](./screenshots/patient-panel.png) <br/> **Overview** — current plan and history | ![Agenda](./screenshots/patient-agenda.png) <br/> **Agenda** — upcoming appointments |
 
-![Measurement view](./screenshots/measurement-view.png)
-*Caption: Patient measurements — weight and BMI trajectory.*
+</div>
 
-![Plan editor](./screenshots/plan-editor.png)
-*Caption: Meal plan editor.*
-
-![Routine assignment](./screenshots/routine-assignment.png)
-*Caption: Exercise routine assignment per patient.*
-
-![Patient panel](./screenshots/patient-panel.png)
-*Caption: Patient read-only panel — current plan and history.*
-
----
-
-## Status
-
-**In development.** Core flows (booking, doctor panel, patient panel, clinical history) are functional; polishing and testing before release.
-
-### Roadmap / known limitations
-- No billing or invoicing module yet.
-
-- WhatsApp integration currently produces confirmation links; deeper automation is planned.
-
-- No analytics dashboard — priority is the clinical workflow first.
-
-- PDF export of plans is on the roadmap.
+*Patient names, emails, phone numbers, and clinical data in published screenshots are fictional or redacted for privacy.*
 
 ---
 
-*Source code is private. This folder is a showcase only.*
+## Work With Me
+
+I built NutriBalance as a real production system for a real nutrition practice. The doctor and patient panels are **not publicly reachable**; access is scoped to authenticated users.
+
+I am currently open to:
+*   **Junior Developer Roles:** I am looking to bring this problem-solving mindset to a full-time engineering team.
+*   **Collaborations:** Partnering on lean, operator-first software for small businesses.
+*   **Freelance and Contract Work:** Building custom booking systems, internal tools, and clinical management platforms.
+
+*Note: The source code is private as it is actively used in production. I am happy to do a live code walkthrough during an interview.*
+
+**Reach me:** [Email](mailto:razielrosas.m@gmail.com) · [LinkedIn](https://www.linkedin.com/in/raziel-rosas) · [https://github.com/razielrosasm-cmd](https://github.com/razielrosasm-cmd)
+
+---
+<div align="center">
+<sub>Source code is private. This repository is a showcase of my production work.</sub>
+</div>
